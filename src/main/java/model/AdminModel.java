@@ -3,7 +3,7 @@ package model;
 import java.io.Serializable;
 import java.sql.Date;
 
-public class Admin implements Serializable {
+public class AdminModel implements Serializable {
     private int adminId;
     private String username;
     private String password;
@@ -16,13 +16,13 @@ public class Admin implements Serializable {
     private String department;
 
     // Constructor mặc định
-    public Admin() {
+    public AdminModel() {
     }
 
     // Constructor đầy đủ
-    public Admin(int adminId, String username, String password, String email,
-                 String firstName, String lastName, String phone, String address,
-                 Date hireDate, String department) {
+    public AdminModel(int adminId, String username, String password, String email,
+                      String firstName, String lastName, String phone, String address,
+                      Date hireDate, String department) {
         this.adminId = adminId;
         this.username = username;
         this.password = password;

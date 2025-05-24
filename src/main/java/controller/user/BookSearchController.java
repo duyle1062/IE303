@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/api/book/search")
-public class BookSearchServlet extends BaseServlet {
+public class BookSearchController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String query = req.getParameter("q");

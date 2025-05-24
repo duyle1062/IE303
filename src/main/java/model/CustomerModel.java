@@ -2,7 +2,7 @@ package model;
 
 import java.io.Serializable;
 
-public class Customer implements Serializable {
+public class CustomerModel implements Serializable {
     private int customerId;
     private String username;
     private String password;
@@ -13,12 +13,12 @@ public class Customer implements Serializable {
     private String address;
 
     // Constructor mặc định
-    public Customer() {
+    public CustomerModel() {
     }
 
     // Constructor đầy đủ
-    public Customer(int customerId, String username, String password, String email,
-                    String firstName, String lastName, String phone, String address) {
+    public CustomerModel(int customerId, String username, String password, String email,
+                         String firstName, String lastName, String phone, String address) {
         this.customerId = customerId;
         this.username = username;
         this.password = password;

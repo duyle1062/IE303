@@ -1,26 +1,26 @@
 package controller.user;
 
 import controller.BaseServlet;
-import model.Customer;
+import model.CustomerModel;
 import service.CustomerService;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import com.google.gson.Gson;
 
 
 @WebServlet("/api/register")
-public class Register extends BaseServlet {
+public class RegisterController extends BaseServlet {
     private static final Gson gson = new Gson();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             BufferedReader reader = req.getReader();
-            Customer cus = gson.fromJson(reader, Customer.class);
+            CustomerModel cus = gson.fromJson(reader, CustomerModel.class);
             System.out.println(cus.getEmail());
 
             String username = cus.getUsername();

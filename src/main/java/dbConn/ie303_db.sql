@@ -207,3 +207,5 @@ INSERT INTO BOOK_BORROW (borrowing_id, book_id, quantity)
 VALUES (4, 5, 3);
 INSERT INTO BOOK_BORROW (borrowing_id, book_id, quantity)
 VALUES (5, 10, 1);
+
+ALTER DATABASE IE303 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

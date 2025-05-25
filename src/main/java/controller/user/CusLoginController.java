@@ -1,6 +1,5 @@
 package controller.user;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.BaseServlet;
 import service.CustomerService;
 import model.CustomerModel;
@@ -9,9 +8,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 @WebServlet("/api/customer/login")

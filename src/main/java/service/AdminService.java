@@ -22,6 +22,12 @@ public class AdminService {
                 admin.setUsername(rs.getString("username"));
                 admin.setPassword(rs.getString("password"));
                 admin.setEmail(rs.getString("email"));
+                admin.setFirstName(rs.getString("first_name"));
+                admin.setLastName(rs.getString("last_name"));
+                admin.setAddress(rs.getString("address"));
+                admin.setPhone(rs.getString("Phone"));
+                admin.setHireDate(rs.getDate("hire_date"));
+                admin.setDepartment(rs.getString("department"));
                 admins.add(admin);
             }
         } catch (SQLException e) {

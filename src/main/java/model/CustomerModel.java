@@ -95,20 +95,6 @@ public class CustomerModel implements Serializable {
     }
 
 
-    // Phương thức tính toán: Lấy tên đầy đủ
-    public String getFullName() {
-        StringBuilder fullName = new StringBuilder();
-        if (firstName != null && !firstName.isEmpty()) {
-            fullName.append(firstName);
-        }
-        if (lastName != null && !lastName.isEmpty()) {
-            if (fullName.length() > 0) {
-                fullName.append(" ");
-            }
-            fullName.append(lastName);
-        }
-        return fullName.toString();
-    }
 
     // Phương thức toString để debug
     @Override

@@ -3,6 +3,7 @@ package service;
 import dbConn.DBConnection;
 import model.Book;
 import model.BookInfo;
+import model.BookAddRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
 public class BookService {
     public List<Book> getAllBooks() {
@@ -138,5 +140,94 @@ public class BookService {
         }
 
         return bookInfo;
+    }
+
+    public Map<String, Object> addBook(BookAddRequest request) {
+        Map<String, Object> response = new HashMap<>();
+
+        // Validate author
+        String authorSql = "SELECT author_id FROM Author WHERE author_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(authorSql)) {
+            stmt.setInt(1, request.getAuthorId());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    response.put("error", "Author not found");
+                    return response;
+                }
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+            return response;
+        }
+
+        // Validate genres (if provided)
+        List<Integer> genreIds = request.getGenreIds() != null ? request.getGenreIds() : new ArrayList<>();
+        if (!genreIds.isEmpty()) {
+            String genreSql = "SELECT genre_id FROM Genre WHERE genre_id = ?";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(genreSql)) {
+                for (Integer genreId : genreIds) {
+                    stmt.setInt(1, genreId);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (!rs.next()) {
+                            response.put("error", "Genre ID " + genreId + " not found");
+                            return response;
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                response.put("error", "Database error");
+                return response;
+            }
+        }
+
+        // Insert book and genres
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                // Insert book
+                String bookSql = "INSERT INTO Books (title, isbn, description, publication_year, copies_available, author_id) VALUES (?, ?, ?, ?, ?, ?)";
+                int bookId;
+                try (PreparedStatement stmt = conn.prepareStatement(bookSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    stmt.setString(1, request.getTitle());
+                    stmt.setString(2, request.getIsbn());
+                    stmt.setString(3, request.getDescription());
+                    stmt.setInt(4, request.getPublicationYear());
+                    stmt.setInt(5, request.getCopiesAvailable());
+                    stmt.setInt(6, request.getAuthorId());
+                    stmt.executeUpdate();
+                    try (ResultSet rs = stmt.getGeneratedKeys()) {
+                        rs.next();
+                        bookId = rs.getInt(1);
+                    }
+                }
+
+                // Insert genres
+                if (!genreIds.isEmpty()) {
+                    String bookGenreSql = "INSERT INTO Book_Genre (book_id, genre_id) VALUES (?, ?)";
+                    try (PreparedStatement stmt = conn.prepareStatement(bookGenreSql)) {
+                        for (Integer genreId : genreIds) {
+                            stmt.setInt(1, bookId);
+                            stmt.setInt(2, genreId);
+                            stmt.executeUpdate();
+                        }
+                    }
+                }
+
+                conn.commit();
+                response.put("message", "Book added successfully");
+                response.put("bookId", bookId);
+            } catch (SQLException e) {
+                conn.rollback();
+                response.put("error", "Failed to add book");
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+        }
+
+        return response;
     }
 }

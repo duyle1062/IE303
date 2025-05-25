@@ -18,10 +18,10 @@ public class AdminLoginController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            AdminModel cus = parseJsonRequest(req, AdminModel.class);
+            AdminModel ad = parseJsonRequest(req, AdminModel.class);
 
-            String username = cus.getUsername();
-            String password = cus.getPassword();
+            String username = ad.getUsername();
+            String password = ad.getPassword();
 
             // Kiểm tra dữ liệu đầu vào
             if (username == null || password == null) {

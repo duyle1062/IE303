@@ -15,8 +15,6 @@ public class AuthUtil {
         // Header chỉ chứa một cookie: "name=value"
         String trimmedHeader = cookieHeader.trim();
         String[] parts = trimmedHeader.split("=", 2);
-        System.out.println(Arrays.toString(request.getCookies()));
-
         return "customer".equals(parts[0]);
     }
 

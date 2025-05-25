@@ -1,5 +1,6 @@
 package controller.user;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.BaseServlet;
 import service.CustomerService;
 import model.CustomerModel;
@@ -8,13 +9,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
-import com.google.gson.Gson;
-import java.io.BufferedReader;
 
 @WebServlet("/api/customer/login")
 public class CusLoginController extends BaseServlet {
-    private static final Gson gson = new Gson();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -45,8 +46,10 @@ public class CusLoginController extends BaseServlet {
                 return;
             }
 
+            int cus_id = foundCustomer.get().getCustomerId();
+
             // Thêm cookie user=Customer
-            Cookie userCookie = new Cookie("user", "Customer");
+            Cookie userCookie = new Cookie("customer", String.valueOf(cus_id));
             userCookie.setHttpOnly(true); // Bảo mật, ngăn JavaScript truy cập
             userCookie.setPath("/"); // Có hiệu lực trên toàn ứng dụng
             userCookie.setMaxAge(60 * 60); // Hết hạn sau 1 giờ (3600 giây)

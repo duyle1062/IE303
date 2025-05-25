@@ -9,19 +9,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
-import com.google.gson.Gson;
+
 
 
 @WebServlet("/api/admin/login")
 public class AdminLoginController extends BaseServlet {
-    private static final Gson gson = new Gson();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            AdminModel cus = parseJsonRequest(req, AdminModel.class);
+            AdminModel ad = parseJsonRequest(req, AdminModel.class);
 
-            String username = cus.getUsername();
-            String password = cus.getPassword();
+            String username = ad.getUsername();
+            String password = ad.getPassword();
 
             // Kiểm tra dữ liệu đầu vào
             if (username == null || password == null) {
@@ -43,8 +42,10 @@ public class AdminLoginController extends BaseServlet {
                 return;
             }
 
+            int admin_id = foundAdmin.get().getAdminId();
+
             // Thêm cookie user=Admin
-            Cookie userCookie = new Cookie("user", "Admin");
+            Cookie userCookie = new Cookie("admin", String.valueOf(admin_id));
             userCookie.setHttpOnly(true); // Bảo mật, ngăn JavaScript truy cập
             userCookie.setPath("/"); // Có hiệu lực trên toàn ứng dụng
             userCookie.setMaxAge(60 * 60); // Hết hạn sau 1 giờ

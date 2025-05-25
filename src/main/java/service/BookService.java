@@ -4,6 +4,7 @@ import dbConn.DBConnection;
 import model.Book;
 import model.BookInfo;
 import model.BookAddRequest;
+import model.BookUpdateRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -269,6 +270,113 @@ public class BookService {
             } catch (SQLException e) {
                 conn.rollback();
                 response.put("error", "Failed to delete book(s)");
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+        }
+
+        return response;
+    }
+
+    public Map<String, String> updateBook(BookUpdateRequest request) {
+        Map<String, String> response = new HashMap<>();
+
+        // Validate book
+        String bookSql = "SELECT book_id FROM Books WHERE book_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(bookSql)) {
+            stmt.setInt(1, request.getBookId());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    response.put("error", "Book not found");
+                    return response;
+                }
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+            return response;
+        }
+
+        // Validate author
+        String authorSql = "SELECT author_id FROM Author WHERE author_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(authorSql)) {
+            stmt.setInt(1, request.getAuthorId());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    response.put("error", "Author not found");
+                    return response;
+                }
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+            return response;
+        }
+
+        // Validate genres (if provided)
+        List<Integer> genreIds = request.getGenreIds() != null ? request.getGenreIds() : new ArrayList<>();
+        if (!genreIds.isEmpty()) {
+            String genreSql = "SELECT genre_id FROM Genre WHERE genre_id = ?";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(genreSql)) {
+                for (Integer genreId : genreIds) {
+                    stmt.setInt(1, genreId);
+                    try (ResultSet rs = stmt.executeQuery()) {
+                        if (!rs.next()) {
+                            response.put("error", "Genre ID " + genreId + " not found");
+                            return response;
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                response.put("error", "Database error");
+                return response;
+            }
+        }
+
+        // Update book and genres
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                // Update book
+                String updateBookSql = "UPDATE Books SET title = ?, isbn = ?, description = ?, publication_year = ?, copies_available = ?, author_id = ? WHERE book_id = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(updateBookSql)) {
+                    stmt.setString(1, request.getTitle());
+                    stmt.setString(2, request.getIsbn());
+                    stmt.setString(3, request.getDescription());
+                    stmt.setInt(4, request.getPublicationYear());
+                    stmt.setInt(5, request.getCopiesAvailable());
+                    stmt.setInt(6, request.getAuthorId());
+                    stmt.setInt(7, request.getBookId());
+                    stmt.executeUpdate();
+                }
+
+                // Delete existing genres
+                String deleteGenresSql = "DELETE FROM Book_Genre WHERE book_id = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(deleteGenresSql)) {
+                    stmt.setInt(1, request.getBookId());
+                    stmt.executeUpdate();
+                }
+
+                // Insert new genres
+                if (!genreIds.isEmpty()) {
+                    String insertGenresSql = "INSERT INTO Book_Genre (book_id, genre_id) VALUES (?, ?)";
+                    try (PreparedStatement stmt = conn.prepareStatement(insertGenresSql)) {
+                        for (Integer genreId : genreIds) {
+                            stmt.setInt(1, request.getBookId());
+                            stmt.setInt(2, genreId);
+                            stmt.executeUpdate();
+                        }
+                    }
+                }
+
+                conn.commit();
+                response.put("message", "Book updated successfully");
+            } catch (SQLException e) {
+                conn.rollback();
+                response.put("error", "Failed to update book");
             } finally {
                 conn.setAutoCommit(true);
             }

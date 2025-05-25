@@ -54,7 +54,7 @@ CREATE TABLE BOOK_GENRE (
     book_genre_id INT AUTO_INCREMENT PRIMARY KEY,
     book_id INT,
     genre_id INT,
-    FOREIGN KEY (book_id) REFERENCES BOOKS(book_id),
+    FOREIGN KEY (book_id) REFERENCES BOOKS(book_id) ON DELETE CASCADE,
     FOREIGN KEY (genre_id) REFERENCES GENRE(genre_id)
 );
 
@@ -65,7 +65,7 @@ CREATE TABLE RESERVATIONS (
     reservation_date DATE,
     status ENUM('active', 'cancelled', 'fulfilled') DEFAULT 'active',
     FOREIGN KEY (customer_id) REFERENCES CUSTOMER(customer_id),
-    FOREIGN KEY (book_id) REFERENCES BOOKS(book_id)
+    FOREIGN KEY (book_id) REFERENCES BOOKS(book_id) ON DELETE CASCADE
 );
 
 
@@ -73,7 +73,6 @@ CREATE TABLE BORROWING (
     borrowing_id INT AUTO_INCREMENT PRIMARY KEY,
     customer_id INT,
     admin_id INT,
-    bill_id INT,
     borrow_date DATE,
     due_date DATE,
     return_date DATE,
@@ -87,7 +86,7 @@ CREATE TABLE BORROWING (
 
 CREATE TABLE BILL (
     bill_id INT AUTO_INCREMENT PRIMARY KEY,
-    borrowing_id int,
+    borrowing_id int unique,
     total_amount DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (borrowing_id) REFERENCES BORROWING(borrowing_id)
@@ -99,7 +98,7 @@ CREATE TABLE BOOK_BORROW (
     book_id INT,
     quantity INT NOT NULL,
     FOREIGN KEY (borrowing_id) REFERENCES BORROWING(borrowing_id),
-    FOREIGN KEY (book_id) REFERENCES BOOKS(book_id)
+    FOREIGN KEY (book_id) REFERENCES BOOKS(book_id) ON DELETE CASCADE
 );
 
 INSERT INTO CUSTOMER (username, password, email, first_name, last_name, phone, address)
@@ -175,16 +174,16 @@ VALUES (4, 5, '2025-05-22', 'active');
 INSERT INTO RESERVATIONS (customer_id, book_id, reservation_date, status)
 VALUES (5, 10, '2025-05-19', 'fulfilled');
 
-INSERT INTO BORROWING (customer_id, admin_id, bill_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (1, 1, 101, '2025-05-01', '2025-05-15', '2025-05-14', 'returned', 10000.00, 0.00);
-INSERT INTO BORROWING (customer_id, admin_id, bill_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (2, 2, 102, '2025-05-05', '2025-05-19', NULL, 'borrowed', 12000.00, 0.00);
-INSERT INTO BORROWING (customer_id, admin_id, bill_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (3, 1, 103, '2025-04-20', '2025-05-04', '2025-05-10', 'returned', 8000.00, 3000.00);
-INSERT INTO BORROWING (customer_id, admin_id, bill_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (4, 2, 104, '2025-05-10', '2025-05-24', NULL, 'borrowed', 15000.00, 0.00);
-INSERT INTO BORROWING (customer_id, admin_id, bill_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (5, 1, 105, '2025-04-15', '2025-04-29', NULL, 'overdue', 11000.00, 5000.00);
+INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
+VALUES (1, 1, '2025-05-01', '2025-05-15', '2025-05-14', 'returned', 10000.00, 0.00);
+INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
+VALUES (2, 2, '2025-05-05', '2025-05-19', NULL, 'borrowed', 12000.00, 0.00);
+INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
+VALUES (3, 1, '2025-04-20', '2025-05-04', '2025-05-10', 'returned', 8000.00, 3000.00);
+INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
+VALUES (4, 2, '2025-05-10', '2025-05-24', NULL, 'borrowed', 15000.00, 0.00);
+INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
+VALUES (5, 1, '2025-04-15', '2025-04-29', NULL, 'overdue', 11000.00, 5000.00);
 
 INSERT INTO BILL (borrowing_id, total_amount)
 VALUES (1, 10000.00);

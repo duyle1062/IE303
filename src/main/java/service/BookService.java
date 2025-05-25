@@ -230,4 +230,52 @@ public class BookService {
 
         return response;
     }
+
+    public Map<String, Object> deleteBookByTitle(String title) {
+        Map<String, Object> response = new HashMap<>();
+
+        // Check if book exists
+        String checkSql = "SELECT COUNT(*) AS count FROM Books WHERE title = ?";
+        int bookCount;
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(checkSql)) {
+            stmt.setString(1, title);
+            try (ResultSet rs = stmt.executeQuery()) {
+                rs.next();
+                bookCount = rs.getInt("count");
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+            return response;
+        }
+
+        if (bookCount == 0) {
+            response.put("error", "No books found with title: " + title);
+            return response;
+        }
+
+        // Delete book(s)
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                String deleteSql = "DELETE FROM Books WHERE title = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(deleteSql)) {
+                    stmt.setString(1, title);
+                    int deletedRows = stmt.executeUpdate();
+                    conn.commit();
+                    response.put("message", "Book(s) deleted successfully");
+                    response.put("deletedCount", deletedRows);
+                }
+            } catch (SQLException e) {
+                conn.rollback();
+                response.put("error", "Failed to delete book(s)");
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+        }
+
+        return response;
+    }
 }

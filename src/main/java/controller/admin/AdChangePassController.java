@@ -31,6 +31,7 @@ public class AdChangePassController extends BaseServlet {
             int adminId;
 
             try {
+                assert adminIdStr != null;
                 adminId = Integer.parseInt(adminIdStr);
             } catch (NumberFormatException e) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

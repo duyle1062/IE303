@@ -4,7 +4,6 @@ import controller.BaseServlet;
 import model.AdminDTO;
 import model.AdminModel;
 import service.AdminService;
-import service.CustomerService;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * Servlet for retrieving admin profile data based on admin_id from cookie.
- */
+
 @WebServlet("/api/admin/profile")
 public class AdProfileController extends BaseServlet {
     private final AdminService adminService = new AdminService();

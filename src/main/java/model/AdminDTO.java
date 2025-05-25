@@ -1,6 +1,5 @@
 package model;
 
-import model.AdminModel;
 import java.util.Date;
 
 public class AdminDTO {

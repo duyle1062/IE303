@@ -19,8 +19,7 @@ public class CusLoginController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            BufferedReader reader = req.getReader();
-            CustomerModel cus = gson.fromJson(reader, CustomerModel.class);
+            CustomerModel cus = parseJsonRequest(req, CustomerModel.class);
 
             String username = cus.getUsername();
             String password = cus.getPassword();

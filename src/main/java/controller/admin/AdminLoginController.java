@@ -1,6 +1,5 @@
 package controller.admin;
 
-import model.CustomerModel;
 import service.AdminService;
 import model.AdminModel;
 import controller.BaseServlet;
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import com.google.gson.Gson;
-import java.io.BufferedReader;
+
 
 @WebServlet("/api/admin/login")
 public class AdminLoginController extends BaseServlet {
@@ -19,8 +18,7 @@ public class AdminLoginController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            BufferedReader reader = req.getReader();
-            CustomerModel cus = gson.fromJson(reader, CustomerModel.class);
+            AdminModel cus = parseJsonRequest(req, AdminModel.class);
 
             String username = cus.getUsername();
             String password = cus.getPassword();

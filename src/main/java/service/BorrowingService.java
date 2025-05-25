@@ -2,14 +2,15 @@ package service;
 
 import dbConn.DBConnection;
 import model.BorrowHistoryResponse;
+import model.BorrowStatusRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class BorrowingService {
+
     public List<BorrowHistoryResponse> getBorrowingHistory(int customerId) {
         List<BorrowHistoryResponse> history = new ArrayList<>();
 
@@ -54,5 +55,60 @@ public class BorrowingService {
         }
 
         return history;
+    }
+
+    public Map<String, String> updateBorrowingStatus(BorrowStatusRequest request) {
+        Map<String, String> response = new HashMap<>();
+
+        // Validate bill
+        String checkSql = "SELECT borrowing_id FROM BORROWING WHERE bill_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(checkSql)) {
+            stmt.setInt(1, request.getBillId());
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.next()) {
+                    response.put("error", "Bill not found");
+                    return response;
+                }
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+            return response;
+        }
+
+        // Update borrowing status
+        try (Connection conn = DBConnection.getConnection()) {
+            conn.setAutoCommit(false);
+            try {
+                String updateSql;
+                if ("returned".equals(request.getStatus())) {
+                    updateSql = "UPDATE BORROWING SET status = ?, return_date = ? WHERE bill_id = ?";
+                    try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
+                        stmt.setString(1, request.getStatus());
+                        stmt.setString(2, request.getReturnDate());
+                        stmt.setInt(3, request.getBillId());
+                        stmt.executeUpdate();
+                    }
+                } else {
+                    updateSql = "UPDATE BORROWING SET status = ?, return_date = NULL WHERE bill_id = ?";
+                    try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
+                        stmt.setString(1, request.getStatus());
+                        stmt.setInt(2, request.getBillId());
+                        stmt.executeUpdate();
+                    }
+                }
+                conn.commit();
+                response.put("message", "Borrowing status updated successfully");
+            } catch (SQLException e) {
+                conn.rollback();
+                response.put("error", "Failed to update status");
+            } finally {
+                conn.setAutoCommit(true);
+            }
+        } catch (SQLException e) {
+            response.put("error", "Database error");
+        }
+
+        return response;
     }
 }

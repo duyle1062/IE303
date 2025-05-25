@@ -2,6 +2,7 @@ package service;
 
 import dbConn.DBConnection;
 import model.Book;
+import model.BookInfo;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -92,5 +93,50 @@ public class BookService {
             throw new RuntimeException(e);
         }
         return books;
+    }
+
+    public BookInfo getBookInfo(int bookId) {
+        BookInfo bookInfo = null;
+        String sql = "SELECT b.book_id, b.title, b.isbn, b.description, b.publication_year, " +
+                "b.copies_available, CONCAT(a.first_name, ' ', a.last_name) AS author_name " +
+                "FROM Books b JOIN Author a ON b.author_id = a.author_id WHERE b.book_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, bookId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    bookInfo = new BookInfo();
+                    bookInfo.setBookId(rs.getInt("book_id"));
+                    bookInfo.setTitle(rs.getString("title"));
+                    bookInfo.setIsbn(rs.getString("isbn"));
+                    bookInfo.setDescription(rs.getString("description"));
+                    bookInfo.setPublicationYear(rs.getInt("publication_year"));
+                    bookInfo.setCopiesAvailable(rs.getInt("copies_available"));
+                    bookInfo.setAuthorName(rs.getString("author_name"));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (bookInfo != null) {
+            List<String> genres = new ArrayList<>();
+            String genreSql = "SELECT g.genre_name FROM Genre g " +
+                    "JOIN Book_Genre bg ON g.genre_id = bg.genre_id WHERE bg.book_id = ?";
+            try (Connection conn = DBConnection.getConnection();
+                 PreparedStatement stmt = conn.prepareStatement(genreSql)) {
+                stmt.setInt(1, bookId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        genres.add(rs.getString("genre_name"));
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            bookInfo.setGenres(genres);
+        }
+
+        return bookInfo;
     }
 }

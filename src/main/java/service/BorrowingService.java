@@ -60,14 +60,14 @@ public class BorrowingService {
     public Map<String, String> updateBorrowingStatus(BorrowStatusRequest request) {
         Map<String, String> response = new HashMap<>();
 
-        // Validate bill
-        String checkSql = "SELECT borrowing_id FROM BORROWING WHERE bill_id = ?";
+        // Validate borrowing
+        String checkSql = "SELECT borrowing_id FROM BORROWING WHERE borrowing_id = ?";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(checkSql)) {
-            stmt.setInt(1, request.getBillId());
+            stmt.setInt(1, request.getBorrowId());
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) {
-                    response.put("error", "Bill not found");
+                    response.put("error", "Borrowing not found");
                     return response;
                 }
             }
@@ -82,18 +82,18 @@ public class BorrowingService {
             try {
                 String updateSql;
                 if ("returned".equals(request.getStatus())) {
-                    updateSql = "UPDATE BORROWING SET status = ?, return_date = ? WHERE bill_id = ?";
+                    updateSql = "UPDATE BORROWING SET status = ?, return_date = ? WHERE borrowing_id = ?";
                     try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
                         stmt.setString(1, request.getStatus());
                         stmt.setString(2, request.getReturnDate());
-                        stmt.setInt(3, request.getBillId());
+                        stmt.setInt(3, request.getBorrowId());
                         stmt.executeUpdate();
                     }
                 } else {
-                    updateSql = "UPDATE BORROWING SET status = ?, return_date = NULL WHERE bill_id = ?";
+                    updateSql = "UPDATE BORROWING SET status = ?, return_date = NULL WHERE borrowing_id = ?";
                     try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
                         stmt.setString(1, request.getStatus());
-                        stmt.setInt(2, request.getBillId());
+                        stmt.setInt(2, request.getBorrowId());
                         stmt.executeUpdate();
                     }
                 }

@@ -15,11 +15,11 @@ public class AdminBorrowStatusController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         BorrowStatusRequest request = parseJsonRequest(req, BorrowStatusRequest.class);
-        if (request.getBillId() <= 0 || request.getStatus() == null ||
+        if (request.getBorrowId() <= 0 || request.getStatus() == null ||
                 !request.getStatus().matches("borrowed|returned|overdue")) {
             resp.setStatus(400);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Valid billId and status (borrowed, returned, overdue) are required");
+            error.put("error", "Valid borrowId and status (borrowed, returned, overdue) are required");
             sendJsonResponse(resp, error);
             return;
         }

@@ -1,12 +1,12 @@
 package model;
 
 public class BorrowStatusRequest {
-    private int billId;
+    private int borrowId;
     private String status;
     private String returnDate;
 
-    public int getBillId() { return billId; }
-    public void setBillId(int billId) { this.billId = billId; }
+    public int getBorrowId() { return borrowId; }
+    public void setBorrowId(int borrowId) { this.borrowId = borrowId; }
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
     public String getReturnDate() { return returnDate; }

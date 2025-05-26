@@ -1,4 +1,4 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 
@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 
-public class ChangePasswordService {
+public class ChangePasswordDAO {
 
     public boolean changeCustomerPassword(int customerId, String newPassword) throws SQLException {
         if (newPassword == null || newPassword.trim().isEmpty()) {

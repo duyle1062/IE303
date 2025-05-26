@@ -1,7 +1,6 @@
-package controller.customer;
+package controller.admin;
 
 import controller.BaseServlet;
-import model.BorrowHistoryResponse;
 import DAO.BorrowingDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
@@ -9,37 +8,36 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-@WebServlet("/api/customer/borrowing/history")
-public class CusBorrowHistoryController extends BaseServlet {
+@WebServlet("/api/admin/borrowing/calculateOverdueFee")
+public class AdCalcOverdueController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (!AuthUtil.isCustomerCookie(req)) {
+        if (!AuthUtil.isAdminCookie(req)) {
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Customer cookie not found");
+            error.put("error", "Admin cookie not found");
             sendJsonResponse(resp, error);
             return;
         }
 
-        // Get customer_id from cookie
-        String customerIdStr = AuthUtil.getCookieValue(req);
-        int customerId;
+        // Get admin_id from cookie
+        String adminIdStr = AuthUtil.getCookieValue(req);
+        int adminId;
         try {
-            assert customerIdStr != null;
-            customerId = Integer.parseInt(customerIdStr);
+            assert adminIdStr != null;
+            adminId = Integer.parseInt(adminIdStr);
         } catch (NumberFormatException e) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Invalid customer ID in cookie");
+            error.put("error", "Invalid admin ID in cookie");
             sendJsonResponse(resp, error);
             return;
         }
 
         BorrowingDAO borrowingDAO = new BorrowingDAO();
-        List<BorrowHistoryResponse> history = borrowingDAO.getBorrowingHistory(customerId);
-        sendJsonResponse(resp, history);
+        Map<String, Object> response = borrowingDAO.calculateOverdueFees(adminId);
+        sendJsonResponse(resp, response);
     }
 }

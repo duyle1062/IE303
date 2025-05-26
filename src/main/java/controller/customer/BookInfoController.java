@@ -2,7 +2,7 @@ package controller.customer;
 
 import controller.BaseServlet;
 import model.BookInfo;
-import service.BookService;
+import DAO.BookDAO;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,8 +26,8 @@ public class BookInfoController extends BaseServlet {
             sendJsonResponse(resp, "bookId must be a valid integer");
             return;
         }
-        BookService bookService = new BookService();
-        BookInfo bookInfo = bookService.getBookInfo(bookId);
+        BookDAO bookDAO = new BookDAO();
+        BookInfo bookInfo = bookDAO.getBookInfo(bookId);
         sendJsonResponse(resp, bookInfo == null ? "No result" : bookInfo);
     }
 }

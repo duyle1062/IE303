@@ -1,4 +1,4 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 import model.CustomerModel;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomerService {
+public class CustomerDAO {
     public void registerCustomer(String username, String password, String email,
                                  String firstName, String lastName, String phone, String address) {
         // Tạo đối tượng Customer

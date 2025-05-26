@@ -2,7 +2,7 @@ package controller.admin;
 
 import controller.BaseServlet;
 import model.BorrowStatusRequest;
-import service.BorrowingService;
+import DAO.BorrowingDAO;
 import util.AuthUtil;
 
 import javax.servlet.annotation.WebServlet;
@@ -52,8 +52,8 @@ public class AdBorrowStatusController extends BaseServlet {
             sendJsonResponse(resp, error);
             return;
         }
-        BorrowingService borrowingService = new BorrowingService();
-        Map<String, String> response = borrowingService.updateBorrowingStatus(request);
+        BorrowingDAO borrowingDAO = new BorrowingDAO();
+        Map<String, String> response = borrowingDAO.updateBorrowingStatus(request);
         sendJsonResponse(resp, response);
     }
 }

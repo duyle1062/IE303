@@ -1,10 +1,9 @@
 package controller.admin;
 
 import controller.BaseServlet;
-import model.BookDeleteRequest;
-import DAO.BookDAO;
+import model.BorrowingAddRequest;
+import DAO.BorrowingDAO;
 import util.AuthUtil;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,8 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/api/admin/book/delete")
-public class AdBookDelController extends BaseServlet {
+@WebServlet("/api/admin/borrowing/add")
+public class AdBorrowAddController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isAdminCookie(req)) {
@@ -35,16 +34,20 @@ public class AdBookDelController extends BaseServlet {
             return;
         }
 
-        BookDeleteRequest request = parseJsonRequest(req, BookDeleteRequest.class);
-        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
-            resp.setStatus(400);
+        BorrowingAddRequest request = parseJsonRequest(req, BorrowingAddRequest.class);
+        if (request.getCustomerId() <= 0 ||
+                request.getBorrowDate() == null || !request.getBorrowDate().matches("\\d{4}-\\d{2}-\\d{2}") ||
+                request.getDueDate() == null || !request.getDueDate().matches("\\d{4}-\\d{2}-\\d{2}") ||
+                request.getBorrowingFee() < 0 || request.getOverdueFee() < 0) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Title is required");
+            error.put("error", "return Valid customerId, borrowDate (yyyy-MM-dd), dueDate (yyyy-MM-dd), borrowingFee, and overdueFee are required");
             sendJsonResponse(resp, error);
             return;
         }
-        BookDAO bookDAO = new BookDAO();
-        Map<String, Object> response = bookDAO.deleteBookByTitle(request.getTitle());
+
+        BorrowingDAO borrowingDAO = new BorrowingDAO();
+        Map<String, Object> response = borrowingDAO.addBorrowing(adminId, request);
         sendJsonResponse(resp, response);
     }
 }

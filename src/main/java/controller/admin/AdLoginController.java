@@ -1,6 +1,6 @@
 package controller.admin;
 
-import service.AdminService;
+import DAO.AdminDAO;
 import model.AdminModel;
 import controller.BaseServlet;
 import javax.servlet.annotation.WebServlet;
@@ -30,8 +30,8 @@ public class AdLoginController extends BaseServlet {
             }
 
             // Gọi AdminService để lấy tất cả admin
-            AdminService adminService = new AdminService();
-            Optional<AdminModel> foundAdmin = adminService.getAllAdmins().stream()
+            AdminDAO adminDAO = new AdminDAO();
+            Optional<AdminModel> foundAdmin = adminDAO.getAllAdmins().stream()
                     .filter(admin -> admin.getUsername().equals(username) && admin.getPassword().equals(password))
                     .findFirst();
 

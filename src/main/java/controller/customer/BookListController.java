@@ -2,7 +2,7 @@ package controller.customer;
 
 import controller.BaseServlet;
 import model.Book;
-import service.BookService;
+import DAO.BookDAO;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,8 +14,8 @@ public class BookListController extends BaseServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            BookService bookService = new BookService();
-            List<Book> books = bookService.getAllBooks();
+            BookDAO bookDAO = new BookDAO();
+            List<Book> books = bookDAO.getAllBooks();
             sendJsonResponse(resp, books);
         } catch (RuntimeException e) {
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

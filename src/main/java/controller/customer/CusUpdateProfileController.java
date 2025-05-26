@@ -2,7 +2,7 @@ package controller.customer;
 
 import controller.BaseServlet;
 import model.CustomerModel;
-import service.UpdateProfileService;
+import DAO.UpdateProfileDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 @WebServlet("/api/customer/update-profile")
 public class CusUpdateProfileController extends BaseServlet {
-    private final UpdateProfileService updateProfileService = new UpdateProfileService();
+    private final UpdateProfileDAO updateProfileDAO = new UpdateProfileDAO();
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -63,7 +63,7 @@ public class CusUpdateProfileController extends BaseServlet {
             }
 
             // Cập nhật profile
-            boolean success = updateProfileService.updateCustomerProfile(customerId, customer);
+            boolean success = updateProfileDAO.updateCustomerProfile(customerId, customer);
             Map<String, String> response = new HashMap<>();
             response.put("message", success ? "Customer profile updated successfully" : "Customer not found");
             sendJsonResponse(resp, response);

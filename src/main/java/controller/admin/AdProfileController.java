@@ -1,9 +1,8 @@
 package controller.admin;
 
 import controller.BaseServlet;
-import model.AdminDTO;
 import model.AdminModel;
-import service.AdminService;
+import DAO.AdminDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +15,7 @@ import java.util.Optional;
 
 @WebServlet("/api/admin/profile")
 public class AdProfileController extends BaseServlet {
-    private final AdminService adminService = new AdminService();
+    private final AdminDAO adminDAO = new AdminDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -39,14 +38,14 @@ public class AdProfileController extends BaseServlet {
                 return;
             }
 
-            AdminService adminService = new AdminService();
-            Optional<AdminModel> foundAdmin = adminService.getAllAdmins().stream()
+            AdminDAO adminDAO = new AdminDAO();
+            Optional<AdminModel> foundAdmin = adminDAO.getAllAdmins().stream()
                     .filter(admin -> String.valueOf(admin.getAdminId()).equals(adminIdStr))
                     .findFirst();
 
             if (foundAdmin.isPresent()) {
                 AdminModel admin = foundAdmin.get();
-                AdminDTO adminDTO = new AdminDTO(admin); // Bỏ password
+                model.AdminDTO adminDTO = new model.AdminDTO(admin); // Bỏ password
                 // Trả về dữ liệu admin dưới dạng JSON
                 sendJsonResponse(resp, adminDTO);
             } else {

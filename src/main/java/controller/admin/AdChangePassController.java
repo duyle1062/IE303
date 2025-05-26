@@ -2,7 +2,7 @@ package controller.admin;
 
 import controller.BaseServlet;
 import model.AdminModel;
-import service.ChangePasswordService;
+import DAO.ChangePasswordDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 @WebServlet("/api/admin/change-password")
 public class AdChangePassController extends BaseServlet {
-    private final ChangePasswordService changePasswordService = new ChangePasswordService();
+    private final ChangePasswordDAO changePasswordDAO = new ChangePasswordDAO();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -50,7 +50,7 @@ public class AdChangePassController extends BaseServlet {
             }
 
             // Thay đổi mật khẩu
-            boolean success = changePasswordService.changeAdminPassword(adminId, newPassword);
+            boolean success = changePasswordDAO.changeAdminPassword(adminId, newPassword);
             Map<String, String> response = new HashMap<>();
             response.put("message", success ? "Admin password changed successfully" : "Admin not found");
 

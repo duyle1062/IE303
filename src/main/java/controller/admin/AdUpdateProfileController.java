@@ -2,7 +2,7 @@ package controller.admin;
 
 import controller.BaseServlet;
 import model.AdminModel;
-import service.UpdateProfileService;
+import DAO.UpdateProfileDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 @WebServlet("/api/admin/update-profile")
 public class AdUpdateProfileController extends BaseServlet {
-    private final UpdateProfileService updateProfileService = new UpdateProfileService();
+    private final UpdateProfileDAO updateProfileDAO = new UpdateProfileDAO();
 
     @Override
     protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -64,7 +64,7 @@ public class AdUpdateProfileController extends BaseServlet {
             }
 
             // Cập nhật profile
-            boolean success = updateProfileService.updateAdminProfile(adminId, ad);
+            boolean success = updateProfileDAO.updateAdminProfile(adminId, ad);
             Map<String, String> response = new HashMap<>();
             response.put("message", success ? "Admin profile updated successfully" : "Admin not found");
             sendJsonResponse(resp, response);

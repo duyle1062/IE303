@@ -2,7 +2,7 @@ package controller.admin;
 
 import controller.BaseServlet;
 import model.BookAddRequest;
-import service.BookService;
+import DAO.BookDAO;
 import util.AuthUtil;
 
 import javax.servlet.annotation.WebServlet;
@@ -47,8 +47,8 @@ public class AdBookAddController extends BaseServlet {
             sendJsonResponse(resp, error);
             return;
         }
-        BookService bookService = new BookService();
-        Map<String, Object> response = bookService.addBook(request);
+        BookDAO bookDAO = new BookDAO();
+        Map<String, Object> response = bookDAO.addBook(request);
         sendJsonResponse(resp, response);
     }
 }

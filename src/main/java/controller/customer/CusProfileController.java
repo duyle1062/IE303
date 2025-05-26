@@ -3,7 +3,7 @@ package controller.customer;
 import controller.BaseServlet;
 import model.CustomerModel;
 import model.CustomerDTO;
-import service.CustomerService;
+import DAO.CustomerDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @WebServlet("/api/customer/profile")
 public class CusProfileController extends BaseServlet {
-    private final CustomerService customerService = new CustomerService();
+    private final CustomerDAO customerDAO = new CustomerDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -41,8 +41,8 @@ public class CusProfileController extends BaseServlet {
 
             // Lấy thông tin customer từ cơ sở dữ liệu
             // Gọi CustomerService để lấy tất cả khách hàng
-            CustomerService customerService = new CustomerService();
-            Optional<CustomerModel> foundCustomer = customerService.getAllCustomers().stream()
+            CustomerDAO customerDAO = new CustomerDAO();
+            Optional<CustomerModel> foundCustomer = customerDAO.getAllCustomers().stream()
                     .filter(customer -> String.valueOf(customer.getCustomerId()).equals(customerIdStr))
                     .findFirst();
 

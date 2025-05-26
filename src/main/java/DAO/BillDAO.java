@@ -1,4 +1,4 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 import java.sql.Connection;
@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BillService {
+public class BillDAO {
     public Map<String, Object> updateAllBillTotals() {
         Map<String, Object> response = new HashMap<>();
         int updatedCount = 0;

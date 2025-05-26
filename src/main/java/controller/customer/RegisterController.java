@@ -2,7 +2,7 @@ package controller.customer;
 
 import controller.BaseServlet;
 import model.CustomerModel;
-import service.CustomerService;
+import DAO.CustomerDAO;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,8 +31,8 @@ public class RegisterController extends BaseServlet {
 
 
             // Gọi CustomerService để đăng ký
-            CustomerService CustomerService = new CustomerService();
-            CustomerService.registerCustomer(username, password, email, firstName, lastName, phone, address);
+            CustomerDAO CustomerDAO = new CustomerDAO();
+            CustomerDAO.registerCustomer(username, password, email, firstName, lastName, phone, address);
 
             // Trả về phản hồi thành công
             sendJsonResponse(resp, "Customer registered successfully");

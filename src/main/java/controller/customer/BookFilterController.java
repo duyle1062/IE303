@@ -3,7 +3,7 @@ package controller.customer;
 import controller.BaseServlet;
 import model.FilterRequest;
 import model.Book;
-import service.BookService;
+import DAO.BookDAO;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +20,8 @@ public class BookFilterController extends BaseServlet {
             sendJsonResponse(resp, "authorName and genreName are required");
             return;
         }
-        BookService bookService = new BookService();
-        List<Book> books = bookService.filterBooks(filter.getAuthorName(), filter.getGenreName());
+        BookDAO bookDAO = new BookDAO();
+        List<Book> books = bookDAO.filterBooks(filter.getAuthorName(), filter.getGenreName());
         sendJsonResponse(resp, books.isEmpty() ? "No result" : books);
     }
 }

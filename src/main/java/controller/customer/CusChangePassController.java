@@ -2,7 +2,7 @@ package controller.customer;
 
 import controller.BaseServlet;
 import model.CustomerModel;
-import service.ChangePasswordService;
+import DAO.ChangePasswordDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 @WebServlet("/api/customer/change-password")
 public class CusChangePassController extends BaseServlet {
-    private final ChangePasswordService changePasswordService = new ChangePasswordService();
+    private final ChangePasswordDAO changePasswordDAO = new ChangePasswordDAO();
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -49,7 +49,7 @@ public class CusChangePassController extends BaseServlet {
             }
 
             // Thay đổi mật khẩu
-            boolean success = changePasswordService.changeCustomerPassword(customerId, newPassword);
+            boolean success = changePasswordDAO.changeCustomerPassword(customerId, newPassword);
             Map<String, String> response = new HashMap<>();
             response.put("message", success ? "Customer password changed successfully" : "Customer not found");
 

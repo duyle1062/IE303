@@ -1,15 +1,14 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ReservationService {
+public class ReservationDAO {
     public Map<String, Object> createReservation(int customerId, String bookName) {
         Map<String, Object> response = new HashMap<>();
 

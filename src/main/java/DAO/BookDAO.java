@@ -1,4 +1,4 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 import model.Book;
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
-public class BookService {
+public class BookDAO {
     public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
         String sql = "SELECT * FROM BOOKS";

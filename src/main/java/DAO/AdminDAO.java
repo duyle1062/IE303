@@ -1,4 +1,4 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 import model.AdminModel;
@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AdminService {
+public class AdminDAO {
     public List<AdminModel> getAllAdmins() {
         List<AdminModel> admins = new ArrayList<>();
         String sql = "SELECT * FROM ADMIN";

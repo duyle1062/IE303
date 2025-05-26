@@ -179,22 +179,22 @@ VALUES (1, 1, '2025-05-01', '2025-05-15', '2025-05-14', 'returned', 10000.00, 0.
 INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
 VALUES (2, 2, '2025-05-05', '2025-05-19', NULL, 'borrowed', 12000.00, 0.00);
 INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (3, 1, '2025-04-20', '2025-05-04', '2025-05-10', 'returned', 8000.00, 3000.00);
+VALUES (3, 1, '2025-04-20', '2025-05-04', '2025-05-10', 'returned', 8000.00, 50000.00);
 INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
 VALUES (4, 2, '2025-05-10', '2025-05-24', NULL, 'borrowed', 15000.00, 0.00);
 INSERT INTO BORROWING (customer_id, admin_id, borrow_date, due_date, return_date, status, borrowing_fee, overdue_fee)
-VALUES (5, 1, '2025-04-15', '2025-04-29', NULL, 'overdue', 11000.00, 5000.00);
+VALUES (5, 1, '2025-04-15', '2025-04-29', NULL, 'overdue', 11000.00, 50000.00);
 
 INSERT INTO BILL (borrowing_id, total_amount)
 VALUES (1, 10000.00);
 INSERT INTO BILL (borrowing_id, total_amount)
 VALUES (2, 12000.00);
 INSERT INTO BILL (borrowing_id, total_amount)
-VALUES (3, 11000.00);  -- borrowing_fee + overdue_fee from borrowing_id=3
+VALUES (3, 58000.00);  -- borrowing_fee + overdue_fee from borrowing_id=3
 INSERT INTO BILL (borrowing_id, total_amount)
 VALUES (4, 15000.00);
 INSERT INTO BILL (borrowing_id, total_amount)
-VALUES (5, 16000.00);  -- borrowing_fee + overdue_fee from borrowing_id=5
+VALUES (5, 61000.00);  -- borrowing_fee + overdue_fee from borrowing_id=5
 
 INSERT INTO BOOK_BORROW (borrowing_id, book_id, quantity)
 VALUES (1, 3, 1);

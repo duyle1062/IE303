@@ -1,4 +1,4 @@
-package service;
+package DAO;
 
 import dbConn.DBConnection;
 import model.CustomerModel;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UpdateProfileService {
+public class UpdateProfileDAO {
 
 
     public boolean updateCustomerProfile(int customerId, CustomerModel customer) throws SQLException {

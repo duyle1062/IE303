@@ -2,7 +2,7 @@ package controller.admin;
 
 import controller.BaseServlet;
 import model.BookUpdateRequest;
-import service.BookService;
+import DAO.BookDAO;
 import util.AuthUtil;
 
 import javax.servlet.annotation.WebServlet;
@@ -48,8 +48,8 @@ public class AdBookUpdateController extends BaseServlet {
             sendJsonResponse(resp, error);
             return;
         }
-        BookService bookService = new BookService();
-        Map<String, String> response = bookService.updateBook(request);
+        BookDAO bookDAO = new BookDAO();
+        Map<String, String> response = bookDAO.updateBook(request);
         sendJsonResponse(resp, response);
     }
 }

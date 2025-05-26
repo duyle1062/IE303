@@ -2,7 +2,7 @@ package controller.customer;
 
 import controller.BaseServlet;
 import model.ReservationRequest;
-import service.ReservationService;
+import DAO.ReservationDAO;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +46,8 @@ public class CusReservController extends BaseServlet {
             return;
         }
 
-        ReservationService reservationService = new ReservationService();
-        Map<String, Object> response = reservationService.createReservation(customerId, request.getBookName());
+        ReservationDAO reservationDAO = new ReservationDAO();
+        Map<String, Object> response = reservationDAO.createReservation(customerId, request.getBookName());
         sendJsonResponse(resp, response);
     }
 }

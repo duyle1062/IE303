@@ -44,7 +44,7 @@ IE303/
 │   │   │   ├── dbConn/
 │   │   │   │   ├── DBConnection.java
 │   │   │   │   ├── ie303_db.java
-│   │   │   ├── service/
+│   │   │   ├── DAO/
 │   │   │   │   ├── UserService.java
 │   │   │   │   ├── BookService.java
 │   │   │   │   ├── ReservationService.java

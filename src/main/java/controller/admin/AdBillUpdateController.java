@@ -1,7 +1,7 @@
 package controller.admin;
 
 import controller.BaseServlet;
-import service.BillService;
+import DAO.BillDAO;
 import util.AuthUtil;
 
 import javax.servlet.annotation.WebServlet;
@@ -33,8 +33,8 @@ public class AdBillUpdateController extends BaseServlet {
             return;
         }
         
-        BillService billService = new BillService();
-        Map<String, Object> response = billService.updateAllBillTotals();
+        BillDAO billDAO = new BillDAO();
+        Map<String, Object> response = billDAO.updateAllBillTotals();
         sendJsonResponse(resp, response);
     }
 }

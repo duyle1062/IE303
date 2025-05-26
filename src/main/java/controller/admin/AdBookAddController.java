@@ -1,7 +1,7 @@
 package controller.admin;
 
 import controller.BaseServlet;
-import model.BookUpdateRequest;
+import model.BookAddRequest;
 import service.BookService;
 import util.AuthUtil;
 
@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/api/admin/book/update")
-public class AdminBookUpdateController extends BaseServlet {
+@WebServlet("/api/admin/book/add")
+public class AdBookAddController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isAdminCookie(req)) {
@@ -35,9 +35,8 @@ public class AdminBookUpdateController extends BaseServlet {
             return;
         }
 
-        BookUpdateRequest request = parseJsonRequest(req, BookUpdateRequest.class);
-        if (request.getBookId() <= 0 ||
-                request.getTitle() == null || request.getTitle().trim().isEmpty() ||
+        BookAddRequest request = parseJsonRequest(req, BookAddRequest.class);
+        if (request.getTitle() == null || request.getTitle().trim().isEmpty() ||
                 request.getIsbn() == null || request.getIsbn().trim().isEmpty() ||
                 request.getDescription() == null || request.getDescription().trim().isEmpty() ||
                 request.getPublicationYear() <= 0 || request.getCopiesAvailable() < 0 ||
@@ -49,7 +48,7 @@ public class AdminBookUpdateController extends BaseServlet {
             return;
         }
         BookService bookService = new BookService();
-        Map<String, String> response = bookService.updateBook(request);
+        Map<String, Object> response = bookService.addBook(request);
         sendJsonResponse(resp, response);
     }
 }

@@ -1,4 +1,4 @@
-package controller.user;
+package controller.customer;
 
 import controller.BaseServlet;
 import model.Book;

@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @WebServlet("/api/admin/bill/updateTotal")
-public class AdminBillUpdateController extends BaseServlet {
+public class AdBillUpdateController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isAdminCookie(req)) {

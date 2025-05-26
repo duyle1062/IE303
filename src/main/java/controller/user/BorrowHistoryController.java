@@ -1,9 +1,9 @@
 package controller.user;
 
 import controller.BaseServlet;
-import model.BorrowHistoryRequest;
 import model.BorrowHistoryResponse;
 import service.BorrowingService;
+import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,16 +16,30 @@ import java.util.Map;
 public class BorrowHistoryController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        BorrowHistoryRequest request = parseJsonRequest(req, BorrowHistoryRequest.class);
-        if (request.getCustomerId() <= 0) {
-            resp.setStatus(400);
+        if (!AuthUtil.isCustomerCookie(req)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "customerId is required");
+            error.put("error", "Customer cookie not found");
             sendJsonResponse(resp, error);
             return;
         }
+
+        // Get customer_id from cookie
+        String customerIdStr = AuthUtil.getCookieValue(req);
+        int customerId;
+        try {
+            assert customerIdStr != null;
+            customerId = Integer.parseInt(customerIdStr);
+        } catch (NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid customer ID in cookie");
+            sendJsonResponse(resp, error);
+            return;
+        }
+
         BorrowingService borrowingService = new BorrowingService();
-        List<BorrowHistoryResponse> history = borrowingService.getBorrowingHistory(request.getCustomerId());
+        List<BorrowHistoryResponse> history = borrowingService.getBorrowingHistory(customerId);
         sendJsonResponse(resp, history);
     }
 }

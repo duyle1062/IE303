@@ -12,11 +12,18 @@ public class LogoutController extends BaseServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
             // Tạo cookie với tên "user" và đặt Max-Age = 0 để hủy
-            Cookie userCookie = new Cookie("user", "");
-            userCookie.setHttpOnly(true); // Giữ HttpOnly như khi thiết lập
-            userCookie.setPath("/"); // Đảm bảo Path khớp với cookie gốc
-            userCookie.setMaxAge(0); // Hủy cookie ngay lập tức
-            resp.addCookie(userCookie);
+            Cookie adminCookie = new Cookie("admin", "");
+            adminCookie.setHttpOnly(true);
+            adminCookie.setPath("/");
+            adminCookie.setMaxAge(0);
+            resp.addCookie(adminCookie);
+
+            // Xóa cookie "customer"
+            Cookie customerCookie = new Cookie("customer", "");
+            customerCookie.setHttpOnly(true);
+            customerCookie.setPath("/");
+            customerCookie.setMaxAge(0);
+            resp.addCookie(customerCookie);
 
             // Trả về phản hồi thành công
             sendJsonResponse(resp, "Logout successful");

@@ -10,14 +10,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ReservationService {
-    public Map<String, Object> createReservation(int custId, String bookName) {
+    public Map<String, Object> createReservation(int customerId, String bookName) {
         Map<String, Object> response = new HashMap<>();
 
         // Validate customer
-        String custSql = "SELECT customer_id FROM Customer WHERE customer_id = ?";
+        String customerSql = "SELECT customer_id FROM CUSTOMER WHERE customer_id = ?";
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(custSql)) {
-            stmt.setInt(1, custId);
+             PreparedStatement stmt = conn.prepareStatement(customerSql)) {
+            stmt.setInt(1, customerId);
             try (ResultSet rs = stmt.executeQuery()) {
                 if (!rs.next()) {
                     response.put("error", "Customer not found");
@@ -29,8 +29,8 @@ public class ReservationService {
             return response;
         }
 
-        // Find book and check availability
-        String bookSql = "SELECT book_id, copies_available FROM Books WHERE title = ?";
+        // Find book
+        String bookSql = "SELECT book_id, copies_available FROM BOOKS WHERE title = ?";
         int bookId = -1;
         int copiesAvailable = 0;
         try (Connection conn = DBConnection.getConnection();
@@ -50,43 +50,32 @@ public class ReservationService {
             return response;
         }
 
+        // Check if book is available
         if (copiesAvailable <= 0) {
-            response.put("error", "No copies available");
+            response.put("error", "Book is not available");
             return response;
         }
 
-        // Create reservation and update copies
+        // Create reservation
+        String insertSql = "INSERT INTO Reservations (customer_id, book_id, reservation_date, status) VALUES (?, ?, NOW(), 'active')";
         try (Connection conn = DBConnection.getConnection()) {
             conn.setAutoCommit(false);
             try {
-                // Insert reservation
-                String reservationSql = "INSERT INTO Reservations (customer_id, book_id, reservation_date, status) VALUES (?, ?, ?, ?)";
-                int reservationId;
-                try (PreparedStatement stmt = conn.prepareStatement(reservationSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-                    stmt.setInt(1, custId);
+                try (PreparedStatement stmt = conn.prepareStatement(insertSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+                    stmt.setInt(1, customerId);
                     stmt.setInt(2, bookId);
-                    stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-                    stmt.setString(4, "active");
                     stmt.executeUpdate();
                     try (ResultSet rs = stmt.getGeneratedKeys()) {
-                        rs.next();
-                        reservationId = rs.getInt(1);
+                        if (rs.next()) {
+                            response.put("message", "Reservation created successfully");
+                            response.put("reservationId", rs.getInt(1));
+                        }
                     }
                 }
-
-                // Update copies_available
-                String updateSql = "UPDATE Books SET copies_available = copies_available - 1 WHERE book_id = ?";
-                try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
-                    stmt.setInt(1, bookId);
-                    stmt.executeUpdate();
-                }
-
                 conn.commit();
-                response.put("message", "Reservation successful");
-                response.put("reservationId", reservationId);
             } catch (SQLException e) {
                 conn.rollback();
-                response.put("error", "Reservation failed");
+                response.put("error", "Failed to create reservation");
             } finally {
                 conn.setAutoCommit(true);
             }

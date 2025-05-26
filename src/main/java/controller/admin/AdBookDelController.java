@@ -1,7 +1,7 @@
 package controller.admin;
 
 import controller.BaseServlet;
-import model.BookAddRequest;
+import model.BookDeleteRequest;
 import service.BookService;
 import util.AuthUtil;
 
@@ -12,8 +12,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/api/admin/book/add")
-public class AdminBookAddController extends BaseServlet {
+@WebServlet("/api/admin/book/delete")
+public class AdBookDelController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isAdminCookie(req)) {
@@ -35,20 +35,16 @@ public class AdminBookAddController extends BaseServlet {
             return;
         }
 
-        BookAddRequest request = parseJsonRequest(req, BookAddRequest.class);
-        if (request.getTitle() == null || request.getTitle().trim().isEmpty() ||
-                request.getIsbn() == null || request.getIsbn().trim().isEmpty() ||
-                request.getDescription() == null || request.getDescription().trim().isEmpty() ||
-                request.getPublicationYear() <= 0 || request.getCopiesAvailable() < 0 ||
-                request.getAuthorId() <= 0) {
+        BookDeleteRequest request = parseJsonRequest(req, BookDeleteRequest.class);
+        if (request.getTitle() == null || request.getTitle().trim().isEmpty()) {
             resp.setStatus(400);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "All book fields are required and must be valid");
+            error.put("error", "Title is required");
             sendJsonResponse(resp, error);
             return;
         }
         BookService bookService = new BookService();
-        Map<String, Object> response = bookService.addBook(request);
+        Map<String, Object> response = bookService.deleteBookByTitle(request.getTitle());
         sendJsonResponse(resp, response);
     }
 }

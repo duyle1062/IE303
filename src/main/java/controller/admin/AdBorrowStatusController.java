@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @WebServlet("/api/admin/borrow/status")
-public class AdminBorrowStatusController extends BaseServlet {
+public class AdBorrowStatusController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isAdminCookie(req)) {

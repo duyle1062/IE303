@@ -1,18 +1,19 @@
-package controller.user;
+package controller.customer;
 
 import controller.BaseServlet;
-import model.ReservationRequest;
-import service.ReservationService;
+import model.BorrowHistoryResponse;
+import service.BorrowingService;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@WebServlet("/api/reservation")
-public class ReservationController extends BaseServlet {
+@WebServlet("/api/customer/borrowing/history")
+public class CusBorrowHistoryController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isCustomerCookie(req)) {
@@ -37,17 +38,8 @@ public class ReservationController extends BaseServlet {
             return;
         }
 
-        ReservationRequest request = parseJsonRequest(req, ReservationRequest.class);
-        if (request.getBookName() == null || request.getBookName().trim().isEmpty()) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            Map<String, String> error = new HashMap<>();
-            error.put("error", "bookName is required");
-            sendJsonResponse(resp, error);
-            return;
-        }
-
-        ReservationService reservationService = new ReservationService();
-        Map<String, Object> response = reservationService.createReservation(customerId, request.getBookName());
-        sendJsonResponse(resp, response);
+        BorrowingService borrowingService = new BorrowingService();
+        List<BorrowHistoryResponse> history = borrowingService.getBorrowingHistory(customerId);
+        sendJsonResponse(resp, history);
     }
 }

@@ -1,7 +1,7 @@
-package controller.user;
+package controller.customer;
 
 import controller.BaseServlet;
-import model.ReservCancelRequest;
+import model.ReservationRequest;
 import service.ReservationService;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-@WebServlet("/api/reservation/cancel")
-public class ReservCancelController extends BaseServlet {
+@WebServlet("/api/customer/reservation")
+public class CusReservController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isCustomerCookie(req)) {
@@ -37,17 +37,17 @@ public class ReservCancelController extends BaseServlet {
             return;
         }
 
-        ReservCancelRequest request = parseJsonRequest(req, ReservCancelRequest.class);
-        if (request.getReservationId() <= 0) {
+        ReservationRequest request = parseJsonRequest(req, ReservationRequest.class);
+        if (request.getBookName() == null || request.getBookName().trim().isEmpty()) {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             Map<String, String> error = new HashMap<>();
-            error.put("error", "reservationId is required");
+            error.put("error", "bookName is required");
             sendJsonResponse(resp, error);
             return;
         }
 
         ReservationService reservationService = new ReservationService();
-        Map<String, Object> response = reservationService.cancelReservation(customerId, request.getReservationId());
+        Map<String, Object> response = reservationService.createReservation(customerId, request.getBookName());
         sendJsonResponse(resp, response);
     }
 }

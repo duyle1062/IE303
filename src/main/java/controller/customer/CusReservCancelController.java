@@ -1,19 +1,18 @@
-package controller.user;
+package controller.customer;
 
 import controller.BaseServlet;
-import model.BorrowHistoryResponse;
-import service.BorrowingService;
+import model.ReservCancelRequest;
+import service.ReservationService;
 import util.AuthUtil;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-@WebServlet("/api/borrowing/history")
-public class BorrowHistoryController extends BaseServlet {
+@WebServlet("/api/customer/reservation/cancel")
+public class CusReservCancelController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         if (!AuthUtil.isCustomerCookie(req)) {
@@ -38,8 +37,17 @@ public class BorrowHistoryController extends BaseServlet {
             return;
         }
 
-        BorrowingService borrowingService = new BorrowingService();
-        List<BorrowHistoryResponse> history = borrowingService.getBorrowingHistory(customerId);
-        sendJsonResponse(resp, history);
+        ReservCancelRequest request = parseJsonRequest(req, ReservCancelRequest.class);
+        if (request.getReservationId() <= 0) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "reservationId is required");
+            sendJsonResponse(resp, error);
+            return;
+        }
+
+        ReservationService reservationService = new ReservationService();
+        Map<String, Object> response = reservationService.cancelReservation(customerId, request.getReservationId());
+        sendJsonResponse(resp, response);
     }
 }

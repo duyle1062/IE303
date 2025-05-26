@@ -19,32 +19,4 @@ public class DBConnection {
         }
         return DriverManager.getConnection(URL, USER, PASSWORD);
     }
-
-//    public static void main(String[] args) {
-//       String url = "jdbc:mysql://localhost:3306/IE303?useSSL=false&characterEncoding=UTF-8";
-//        String user = "root";
-//        String password = "";
-//       String sql = "select * from BOOKS;";
-//        try(Connection conn = DriverManager.getConnection(url, user, password)) {
-//            System.out.println(conn.getCatalog());
-//            Statement statement = conn.createStatement();
-//            ResultSet resultSet = statement.executeQuery(sql);
-//            showInfo(resultSet);
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        };
-//
-//    }
-//
-//    private static void showInfo(ResultSet resultSet) {
-//        try {
-//           while (resultSet.next()) {
-//               System.out.println(resultSet.getInt(1) + " - " + resultSet.getString(2)
-//                        + " - " + resultSet.getString(3) + " - " + resultSet.getString(4)
-//                );
-//            }
-//        } catch (SQLException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 }

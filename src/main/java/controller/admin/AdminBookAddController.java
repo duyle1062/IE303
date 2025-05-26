@@ -3,6 +3,8 @@ package controller.admin;
 import controller.BaseServlet;
 import model.BookAddRequest;
 import service.BookService;
+import util.AuthUtil;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +16,25 @@ import java.util.Map;
 public class AdminBookAddController extends BaseServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (!AuthUtil.isAdminCookie(req)) {
+            resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            sendJsonResponse(resp, "Admin cookie not found");
+            return;
+        }
+
+        // Lấy admin_id từ cookie
+        String adminIdStr = AuthUtil.getCookieValue(req);
+        int adminId;
+
+        try {
+            assert adminIdStr != null;
+            adminId = Integer.parseInt(adminIdStr);
+        } catch (NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            sendJsonResponse(resp, "Invalid admin ID in cookie");
+            return;
+        }
+
         BookAddRequest request = parseJsonRequest(req, BookAddRequest.class);
         if (request.getTitle() == null || request.getTitle().trim().isEmpty() ||
                 request.getIsbn() == null || request.getIsbn().trim().isEmpty() ||

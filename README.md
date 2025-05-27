@@ -3,58 +3,70 @@ IE303/
 ├── .idea/
 ├── .mvn/
 ├── .smarttomcat/
+├── lib
 ├── src/
 │   ├── main/
 │   │   ├── java/
 │   │   │   ├── controller/
-│   │   │   │   ├── user/
-│   │   │   │   │   ├── LoginServlet.java
-│   │   │   │   │   ├── RegisterServlet.java
-│   │   │   │   │   ├── LogoutServlet.java
-│   │   │   │   │   ├── ProfileServlet.java
-│   │   │   │   │   ├── BookSearchServlet.java
-│   │   │   │   │   ├── BookFilterServlet.java
-│   │   │   │   │   ├── BookListServlet.java
-│   │   │   │   │   ├── ReservationServlet.java
-│   │   │   │   │   ├── CancelReservationServlet.java
-│   │   │   │   │   ├── BookInfoServlet.java
-│   │   │   │   │   ├── UpdateProfileServlet.java
-│   │   │   │   │   ├── ChangePasswordServlet.java
-│   │   │   │   │   ├── BorrowingHistoryServlet.java
+│   │   │   │   ├── customer/
+│   │   │   │   │   ├── BookFilterController.java
+│   │   │   │   │   ├── BookInfoController.java
+│   │   │   │   │   ├── BookListController.java
+│   │   │   │   │   ├── BookSearchController.java
+│   │   │   │   │   ├── CusBorrowHistoryController.java
+│   │   │   │   │   ├── CusChangePassController.java
+│   │   │   │   │   ├── CusLoginController.java
+│   │   │   │   │   ├── CusProfileController.java
+│   │   │   │   │   ├── CusReservController.java
+│   │   │   │   │   ├── CusReservCancelController.java
+│   │   │   │   │   ├── CusUpdateProfileController.java
+│   │   │   │   │   ├── RegisterController.java
 │   │   │   │   ├── admin/
-│   │   │   │   │   ├── AddBookServlet.java
-│   │   │   │   │   ├── DeleteBookServlet.java
-│   │   │   │   │   ├── UpdateBookServlet.java
-│   │   │   │   │   ├── BorrowStatusServlet.java
-│   │   │   │   │   ├── ReturnStatusServlet.java
-│   │   │   │   │   ├── OverdueFeeServlet.java
-│   │   │   │   │   ├── BorrowingFeeServlet.java
+│   │   │   │   │   ├── AdBillUpdateController.java
+│   │   │   │   │   ├── AdBookAddController.java
+│   │   │   │   │   ├── AdBookDelController.java
+│   │   │   │   │   ├── AdBookUpdateController.java
+│   │   │   │   │   ├── AdBorrowAddController.java
+│   │   │   │   │   ├── AdBorrowStatusController.java
+│   │   │   │   │   ├── AdCalcOverdueController.java
+│   │   │   │   │   ├── AdChangePassController.java
+│   │   │   │   │   ├── AdLoginController.java
+│   │   │   │   │   ├── AdProfileController.java
+│   │   │   │   │   ├── AdUpdateProfileController.java
 │   │   │   │   ├── BaseServlet.java
+│   │   │   │   ├── LogoutController.java
 │   │   │   ├── model/
-│   │   │   │   ├── User.java
-│   │   │   │   ├── Admin.java
+│   │   │   │   ├── AdminDTO.java
+│   │   │   │   ├── AdminModel.java
 │   │   │   │   ├── Book.java
-│   │   │   │   ├── Reservation.java
-│   │   │   │   ├── Borrowing.java
-│   │   │   │   ├── Bill.java
-│   │   │   │   ├── BookBorrow.java
-│   │   │   │   ├── Author.java
-│   │   │   │   ├── Genre.java
-│   │   │   │   ├── BookGenre.java
+│   │   │   │   ├── BookAddRequest.java
+│   │   │   │   ├── BookDeleteRequest.java
+│   │   │   │   ├── BookInfo.java
+│   │   │   │   ├── BookUpdateRequest.java
+│   │   │   │   ├── BorrowHistoryResponse.java
+│   │   │   │   ├── BorrowingAddRequest.java
+│   │   │   │   ├── BorrowStatusRequest.java
+│   │   │   │   ├── CustomerDTO.java
+│   │   │   │   ├── CustomerModel.java
+│   │   │   │   ├── FilterRequest.java
+│   │   │   │   ├── ReservationRequest.java
+│   │   │   │   ├── ReservCancelRequest.java
 │   │   │   ├── dbConn/
 │   │   │   │   ├── DBConnection.java
 │   │   │   │   ├── ie303_db.java
 │   │   │   ├── DAO/
-│   │   │   │   ├── UserService.java
-│   │   │   │   ├── BookService.java
-│   │   │   │   ├── ReservationService.java
-│   │   │   │   ├── BorrowingService.java
-│   │   │   │   ├── BillService.java
+│   │   │   │   ├── AdminDAO.java
+│   │   │   │   ├── BillDAO.java
+│   │   │   │   ├── BookDAO.java
+│   │   │   │   ├── BorrowingDAO.java
+│   │   │   │   ├── ChangePasswordDAO.java
+│   │   │   │   ├── CustomerDAO.java
+│   │   │   │   ├── ReservationDAO.java
+│   │   │   │   ├── UpdateProfileDAO.java
 │   │   │   ├── util/
 │   │   │   │   ├── JsonUtil.java
 │   │   │   │   ├── AuthUtil.java
 │   │   ├── resources/
-│   │   │   ├── config.properties
 │   │   ├── webapp/
 │   │   │   ├── WEB-INF/
 │   │   │   │   ├── web.xml
